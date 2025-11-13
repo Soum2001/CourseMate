@@ -1,0 +1,33 @@
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4 fw-bold text-primary">Available Courses</h1>
+  <div class="row">
+    <% @courses.each do |course| %>
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-lg border-0 h-100">
+          <% if course.video_url.present? %>
+            <div class="ratio ratio-16x9">
+              <iframe src="https://www.youtube.com/embed/EzKImzjwGyM" allowfullscreen></iframe>
+            </div>
+          <% else %>
+            <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Course image">
+          <% end %>
+
+          <div class="card-body">
+            <h5 class="card-title text-primary fw-bold"><%= course.title %></h5>
+            <p class="card-text text-secondary"><%= truncate(course.description, length: 100) %></p>
+          </div>
+
+          <div class="card-footer bg-white border-0 d-flex justify-content-between">
+            <%= link_to "View", instructors_course_path(course), class: "btn btn-outline-primary btn-sm" %>
+            <%= link_to "Edit", edit_instructors_course_path(course), class: "btn btn-outline-warning btn-sm" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="text-center mt-4">
+    <%= link_to "Create New Course", new_course_path, class: "btn btn-primary px-4 py-2" %>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ *
+ * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
+ * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
+ * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
+ * depending on specificity.
+ *
+ * Consider organizing styles into separate files for maintainability.
+ */
+ @import "bootstrap";
+ body {
+    background-color: #f8f9fb; /* Off-white body */
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa; /* off-white background */
+    color: #333;
+  }
+
+  .navbar {
+    background-color: #ffffff !important; /* White navbar */
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .navbar-brand {
+    font-weight: 600;
+    color: #222 !important;
+  }
+
+  .nav-link {
+    color: #333 !important;
+  }
+
+  .nav-link:hover {
+    color: #007bff !important;
+  }
+
+  .card {
+    border: none;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  }
+
+  .sidebar {
+    background-color: #ffffff;
+    border-right: 1px solid #eaeaea;
+    border-radius: 12px;
+  }
+
+  .list-group-item {
+    border: none;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .list-group-item:hover {
+    background-color: #f1f3f6;
+    color: #007bff;
+  }
+.avatar-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: #3c28f0;
+    color: #fff;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+  }
+  
+  .avatar-circle::after {
+    display: none !important; /* removes dropdown caret */
+  }
+  
+  .avatar-circle:hover {
+    background-color: #0b0604;
+    transform: scale(1.05);
+  }
+  

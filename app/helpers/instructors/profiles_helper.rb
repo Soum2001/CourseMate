@@ -1,0 +1,2 @@
+module Instructors::ProfilesHelper
+end

@@ -1,0 +1,28 @@
+
+
+<div class="container mt-4">
+  <h2><%= @course.title %></h2>
+  <p><%= @course.description %></p>
+
+  <% if @course.video_url.present? %>
+    <div class="mb-3">
+      <h5>Course Video</h5>
+      <div class="ratio ratio-16x9">
+        <iframe src="https://www.youtube.com/embed/EzKImzjwGyM" 
+                title="Course Video" 
+                allowfullscreen
+                frameborder="0"></iframe>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= link_to "Edit Course", edit_instructors_course_path(@course), class: "btn btn-warning" %>
+    <%= link_to "Back to Dashboard", instructors_courses_path, class: "btn btn-secondary" %>
+  </div>
+
+  <hr>
+
+  <h4>Enrolled Students</h4>
+
+</div>
