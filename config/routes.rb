@@ -1,6 +1,17 @@
 Rails.application.routes.draw do
+  namespace :student do
+    get "carts/index"
+    get "carts/create"
+    get "carts/destroy"
+  end
   devise_scope :user do
-    root to: "devise/sessions#new"
+    authenticated :user do
+      root to: "students/courses#index", as: :authenticated_root
+    end
+  
+    unauthenticated do
+      root to: "devise/sessions#new", as: :unauthenticated_root
+    end
   end
 
   devise_for :users, controllers: {
@@ -25,7 +36,12 @@ Rails.application.routes.draw do
     root "courses#index" 
   end
   namespace :students do
+    resources :checkouts, only: [:create]
+    get "checkouts/success", to: "checkouts#success"
+    resources :cart_items
     resources :enrollments
+    resources :carts,only: [:show, :index,:create]
+    resources :courses, only: [:show, :index]
     root "enrollments#index" 
   end
 end

@@ -1,0 +1,2 @@
+module Students::CheckoutsHelper
+end

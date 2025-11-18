@@ -18,6 +18,7 @@ module Instructors
         @course = Course.new(course_params)
         @course.instructor_id = current_user.id  # assuming instructor creates course
         if @course.save
+          binding.pry
           redirect_to instructors_courses_path, notice: "Course was successfully created."
         else
           render :new

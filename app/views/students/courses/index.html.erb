@@ -1,33 +1,61 @@
-
-<div class="container mt-5">
-  <h1 class="text-center mb-4 fw-bold text-primary">Available Courses</h1>
-  <div class="row">
+<!-- Main content -->
+<div class="container my-5">
+      <div class="ms-auto">
+      <h2 class="navbar-text">
+        Welcome <b class="text-dark"><%= current_user.name %></b>
+      </h2>
+    </div>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
     <% @courses.each do |course| %>
-      <div class="col-md-4 mb-4">
-        <div class="card shadow-lg border-0 h-100">
-          <% if course.video_url.present? %>
-            <div class="ratio ratio-16x9">
-              <iframe src="https://www.youtube.com/embed/EzKImzjwGyM" allowfullscreen></iframe>
-            </div>
-          <% else %>
-            <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Course image">
-          <% end %>
+  
+<div class="col">
+  <div class="card h-100 shadow-lg border-0">
 
-          <div class="card-body">
-            <h5 class="card-title text-primary fw-bold"><%= course.title %></h5>
-            <p class="card-text text-secondary"><%= truncate(course.description, length: 100) %></p>
-          </div>
 
-          <div class="card-footer bg-white border-0 d-flex justify-content-between">
-            <%= link_to "View", instructors_course_path(course), class: "btn btn-outline-primary btn-sm" %>
-            <%= link_to "Edit", edit_instructors_course_path(course), class: "btn btn-outline-warning btn-sm" %>
-          </div>
-        </div>
+    <!-- Video OR Placeholder -->
+    <% if course.video_url.present? %>
+      <div class="ratio ratio-16x9">
+        <iframe 
+          src="https://www.youtube.com/embed/EzKImzjwGyM"
+          class="card-img-top rounded"
+          allowfullscreen>
+        </iframe>
       </div>
+    <% else %>
+      <img 
+        src="https://www.youtube.com/embed/EzKImzjwGyM" 
+        class="card-img-top" 
+        alt="Course image">
     <% end %>
-  </div>
+    <div class="p-3" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
+      <h5 class="fw-bold mb-0 text-white">
+        <%= course.title %>
+      </h5>
+    </div>
+    <!-- Description -->
+    <div class="card-body">
+      <p class="card-text"><%= truncate(course.description, length: 120) %></p>
+    </div>
 
-  <div class="text-center mt-4">
-    <%= link_to "Create New Course", new_course_path, class: "btn btn-primary px-4 py-2" %>
+    <!-- Footer -->
+    <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+      
+      <p class="text-success fw-bold mb-3">
+        <%= number_to_currency(course.amount) %>
+      </p>
+
+      <div class="d-flex gap-2">
+     
+        <%= link_to "View Details", students_course_path(course), class: "btn btn-outline-primary btn-sm" %>
+        <%= button_to "Add to Cart",students_cart_items_path(course_id: course.id),method: :post,class: "btn btn-primary btn-sm" %>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+    <% end %>
   </div>
 </div>

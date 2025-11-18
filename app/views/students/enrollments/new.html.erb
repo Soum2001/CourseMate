@@ -1,38 +1,35 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-      <div class="card shadow-lg border-0 rounded-4">
-        <div class="card-header bg-gradient text-white text-center py-3" style="background: linear-gradient(135deg, #007bff, #6610f2);">
-          <h3 class="mb-0 fw-bold">Create a New Course</h3>
-        </div>
+<h2>Enroll in <%= @course.name %></h2>
 
-        <div class="card-body p-4">
-          <%= form_with(model: @course, local: true, html: { class: "needs-validation" }) do |f| %>
-            <div class="mb-3">
-              <%= f.label :title, "Course Title", class: "form-label fw-semibold" %>
-              <%= f.text_field :title, class: "form-control form-control-lg shadow-sm", placeholder: "Enter your course title" %>
-            </div>
+<script src="https://js.stripe.com/v3/"></script>
 
-            <div class="mb-3">
-              <%= f.label :video_url, "Video URL", class: "form-label fw-semibold" %>
-              <%= f.text_field :video_url, class: "form-control form-control-lg shadow-sm", placeholder: "Paste your course video link" %>
-            </div>
-            <div class="mb-3">
-              <%= f.label :amount, "Course Price (₹)" , class: "form-label fw-semibold"%>
-              <%= f.number_field :amount, step: 0.01, class: "form-control",placeholder: "Enter Course Amount"%>
-            </div>
-            <div class="mb-3">
-              <%= f.label :description, "Description", class: "form-label fw-semibold" %>
-              <%= f.text_area :description, class: "form-control form-control-lg shadow-sm", rows: 4, placeholder: "Write a short description about your course" %>
-            </div>
+<form id="payment-form" action="<%= students_enrollments_path %>" method="post">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <%= hidden_field_tag :course_id, @course.id %>
 
-            <div class="d-flex justify-content-between mt-4">
-              <%= link_to "Cancel", courses_path, class: "btn btn-outline-secondary btn-lg px-4 rounded-pill" %>
-              <%= f.submit "Create Course", class: "btn btn-primary btn-lg px-4 rounded-pill shadow" %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+  <input type="email" name="stripeEmail" placeholder="Email" required>
+  <div id="card-element"></div>
+  <button type="submit">Pay & Enroll</button>
+</form>
+
+<script>
+  var stripe = Stripe('<%= Rails.application.credentials.dig(:stripe, :publishable_key) %>');
+  var elements = stripe.elements();
+  var card = elements.create('card');
+  card.mount('#card-element');
+
+  var form = document.getElementById('payment-form');
+  form.addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const { token, error } = await stripe.createToken(card);
+    if (error) {
+      alert(error.message);
+    } else {
+      var hiddenInput = document.createElement('input');
+      hiddenInput.setAttribute('type', 'hidden');
+      hiddenInput.setAttribute('name', 'stripeToken');
+      hiddenInput.setAttribute('value', token.id);
+      form.appendChild(hiddenInput);
+      form.submit();
+    }
+  });
+</script>

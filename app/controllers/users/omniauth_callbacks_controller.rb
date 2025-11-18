@@ -5,8 +5,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # devise :omniauthable, omniauth_providers: [:twitter]
   def google_oauth2
     @user = User.from_omniauth(request.env['omniauth.auth'])
-
-    if @user.persisted?
+    binding.pry
+    if @user.roles.exists?(name: 'student')
+      sign_in(@user, event: :authentication)
+      redirect_to students_courses_path
+    # if @user.persisted?
+    elsif @user.roles.exists?(name: 'instructor')
       sign_in(@user, event: :authentication) # ← sets session
       redirect_to instructors_courses_path
     else

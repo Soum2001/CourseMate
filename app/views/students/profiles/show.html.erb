@@ -1,0 +1,73 @@
+<div class="container mt-4">
+  <div class="row">
+    <!-- Left: Profile Info -->
+    <div class="col-md-4">
+      <div class="card text-center">
+        <%= image_tag "avtar.png", class: "card-img-top", alt: "Instructor Avatar" %>
+        <div class="card-body">
+          <h4 class="card-title"><%= current_user.name %></h4>
+          <p><strong>Email:</strong> <%= current_user.email %></p>
+          <%= link_to "Edit Profile", edit_instructors_profile_path, class: "btn btn-primary btn-sm" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Tabs for Courses and Students -->
+    <div class="col-md-8">
+      <!-- Tabs nav -->
+      <ul class="nav nav-tabs" id="profileTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses" type="button" role="tab" aria-controls="courses" aria-selected="true">
+            Courses
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="students-tab" data-bs-toggle="tab" data-bs-target="#students" type="button" role="tab" aria-controls="students" aria-selected="false">
+            Students
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tabs content -->
+      <div class="tab-content mt-3" id="profileTabContent">
+        <!-- Courses Tab -->
+        <div class="tab-pane fade show active" id="courses" role="tabpanel" aria-labelledby="courses-tab">
+          <% if @courses.any? %>
+            <div class="row">
+              <% @courses.each do |course| %>
+                <div class="col-md-6 mb-3">
+                  <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= course.title %></h5>
+                      <p class="card-text"><%= truncate(course.description, length: 80) %></p>
+                      <p class="text-muted">Students: <%= course.students.count %></p>
+                      <%= link_to "View", instructors_course_path(course), class: "btn btn-sm btn-outline-primary" %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p>No courses created yet.</p>
+          <% end %>
+        </div>
+
+        <!-- Students Tab -->
+        <!--<div class="tab-pane fade" id="students" role="tabpanel" aria-labelledby="students-tab">
+          <% student_list = @courses.map(&:students).flatten.uniq %>
+          <% if student_list.any? %>
+            <ul class="list-group">
+              <% student_list.each do |student| %>
+                <li class="list-group-item">
+                  <%= student.name %> (<%= student.email %>)
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p>No students enrolled yet.</p>
+          <% end %>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
