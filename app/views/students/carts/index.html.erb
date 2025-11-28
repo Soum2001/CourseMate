@@ -127,7 +127,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
   const stripe = Stripe("<%= Rails.configuration.stripe[:publishable_key] %>");
-
+  console.log(<%= @courses.map(&:id) %>);
   document.getElementById("checkout-button").addEventListener("click", async () => {
 
     const response = await fetch("/students/checkouts", {

@@ -1,22 +1,25 @@
 FROM ruby:3.2.2-slim
 
-# Install dependencies
-RUN apt-get update -qq && apt-get install -y nodejs npm
-RUN npm install --global yarn
-
-# Install dependencies
+# Install OS-level dependencies
 RUN apt-get update -qq && apt-get install -y \
+    curl \
+    libcurl4 \
+    libcurl4-openssl-dev \
     build-essential \
     default-libmysqlclient-dev \
-    nodejs \
-    netcat-openbsd \
     git \
+    nodejs \
+    npm \
+    netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
+
+# Install yarn
+RUN npm install --global yarn
 
 # Set working directory
 WORKDIR /rails
 
-# Install gems
+# Install Ruby gems separately (better caching)
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
@@ -26,5 +29,5 @@ COPY . .
 # Expose port
 EXPOSE 3000
 
-# Start server  
+# Start server
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

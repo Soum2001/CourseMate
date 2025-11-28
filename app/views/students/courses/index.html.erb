@@ -45,10 +45,11 @@
       </p>
 
       <div class="d-flex gap-2">
-     
+          
         <%= link_to "View Details", students_course_path(course), class: "btn btn-outline-primary btn-sm" %>
-        <%= button_to "Add to Cart",students_cart_items_path(course_id: course.id),method: :post,class: "btn btn-primary btn-sm" %>
 
+        <%= button_to "Add to Cart",students_cart_items_path(course_id: course.id),method: :post,class: "btn btn-primary btn-sm" %>
+       
       </div>
 
     </div>

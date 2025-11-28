@@ -1,0 +1,25 @@
+<div class="container d-flex justify-content-center align-items-center" style="height: 90vh;">
+  <div class="card shadow-lg p-4" style="width: 550px; border-radius: 20px;">
+    
+    <h2 class="text-center mb-4">AI Tech Interview</h2>
+    <p class="text-center text-muted">
+      Type your preferred technology (Ruby, Python, JavaScript…)
+    </p>
+
+    <%= form_with url: start_students_interviews_path, method: :post, data: { turbo: false } do %>
+      
+      <div class="mb-3">
+        <%= text_area_tag :tech, nil,
+            placeholder: "Enter your preferred tech language...",
+            class: "form-control",
+            style: "height:130px; font-size:16px; border-radius:12px;" %>
+      </div>
+
+      <div class="d-grid">
+        <%= submit_tag "Start Interview", class: "btn btn-primary btn-lg" %>
+      </div>
+
+    <% end %>
+
+  </div>
+</div>

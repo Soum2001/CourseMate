@@ -5,6 +5,7 @@ module Instructors
 
       def index
         @courses = current_user.instructed_courses
+        
       end
     
       def show

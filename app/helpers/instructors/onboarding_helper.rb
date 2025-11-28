@@ -1,0 +1,2 @@
+module Instructors::OnboardingHelper
+end

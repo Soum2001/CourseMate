@@ -1,0 +1,28 @@
+<div class="container" style="max-width: 500px; margin: 50px auto;">
+  <h2 style="text-align: center;">Register Your Institute</h2>
+
+  <p style="text-align: center; color: #666;">
+    Create your own space and start managing your courses.
+  </p>
+
+  <%= form_with model: @institution, url: institutions_path, local: true do |f| %>
+
+    <div class="form-group" style="margin-bottom: 20px;">
+      <%= f.label :name, "Institute Name" %>
+      <%= f.text_field :name, class: "form-control", style: "width: 100%; padding: 10px;" %>
+    </div>
+
+    <div class="form-group" style="margin-bottom: 20px;">
+      <%= f.label :identifier, "Unique Identifier (sub-name)" %>
+      <%= f.text_field :identifier, class: "form-control", style: "width: 100%; padding: 10px;" %>
+      <small style="color: #666;">
+        Example: <b>abcschool</b> → URL becomes <i>/abcschool/login</i>
+      </small>
+    </div>
+
+    <div style="text-align: center;">
+      <%= f.submit "Create Institute", class: "btn btn-primary", style: "padding: 10px 20px;" %>
+    </div>
+
+  <% end %>
+</div>

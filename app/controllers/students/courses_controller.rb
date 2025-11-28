@@ -5,7 +5,7 @@ module Students
 
 
       def index
-        @courses = Course.all
+        @courses = Course.where.not(instructor_id: current_user.id)
       end
     
       def show

@@ -7,8 +7,36 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
-roles = ['admin', 'instructor', 'student']
 
-roles.each do |role_name|
-  Role.find_or_create_by!(name: role_name)
+
+course_titles = [
+  "Beginner Ruby Programming",
+  "Modern JavaScript Essentials",
+  "Full-Stack Web Development",
+  "Python for Absolute Beginners",
+  "Mastering SQL & Databases",
+  "Advanced HTML & CSS",
+  "React.js Bootcamp",
+  "API Development with Rails",
+  "Intro to Cloud Computing",
+  "Docker & DevOps Basics",
+  "Machine Learning Foundation",
+  "Data Analysis with Pandas",
+  "GraphQL Crash Course",
+  "Mobile App Development Basics",
+  "UI/UX Design Principles",
+  "TailwindCSS Deep Dive",
+  "REST API Fundamentals",
+  "Git & GitHub Masterclass",
+  "Agile & Scrum for Developers",
+  "Linux Command Line Essentials"
+]
+
+20.times do |i|
+  Course.create!(
+    title: course_titles[i],
+    description: "A comprehensive course on #{course_titles[i]}. Learn step-by-step with practical projects.",
+    amount: 1,
+    instructor_id: [2, 3].sample
+  )
 end

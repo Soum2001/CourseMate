@@ -1,21 +1,29 @@
 Rails.application.routes.draw do
-  namespace :student do
-    get "carts/index"
-    get "carts/create"
-    get "carts/destroy"
-  end
+  resources :institutions, only: [:new, :create]
+
+  # scope '/:tenant' do
+  #   resources :courses
+  #   resources :students
+  #   resources :teachers
+  #   # … all your routes
+
+  # end
+
   devise_scope :user do
     authenticated :user do
       root to: "students/courses#index", as: :authenticated_root
     end
   
     unauthenticated do
-      root to: "devise/sessions#new", as: :unauthenticated_root
+      root to: "users/sessions#new", as: :unauthenticated_root
     end
   end
 
   devise_for :users, controllers: {
-    omniauth_callbacks: 'users/omniauth_callbacks'
+    sessions: 'users/sessions',
+    omniauth_callbacks: 'users/omniauth_callbacks',
+    registrations: 'users/registrations',
+    passwords: 'users/passwords'
   }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -31,17 +39,37 @@ Rails.application.routes.draw do
   # root "posts#index"
   
   namespace :instructors do
+    get "onboarding/refresh"
+    get "onboarding/return"
     resources :courses
     resource :profile, only: [:show, :edit, :update]
     root "courses#index" 
+    get "onboarding/refresh", to: "onboarding#refresh"
+    get "onboarding/return", to: "onboarding#return"
+    get "onboarding/onboard_account", to: "onboarding#onboard_account"
   end
   namespace :students do
-    resources :checkouts, only: [:create]
-    get "checkouts/success", to: "checkouts#success"
+
     resources :cart_items
+    get "checkouts/success", to: "checkouts#success"
+    resources :checkouts, only: [:create]
     resources :enrollments
-    resources :carts,only: [:show, :index,:create]
+    resources :interviews, only: [] do
+      collection do
+        get  :language
+        post :start
+        post :answer
+        get  :finish
+        get  :ask
+      end
+      member do
+        get :stream_question    
+      end
+    end
+    resources :carts,only: [:show, :index,:create] 
     resources :courses, only: [:show, :index]
     root "enrollments#index" 
   end
+  post "/webhooks/stripe", to: "webhooks#stripe"
+
 end

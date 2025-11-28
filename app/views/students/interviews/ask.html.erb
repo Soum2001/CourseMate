@@ -1,0 +1,79 @@
+<div class="container py-5" style="max-width: 750px;">
+  <div class="card shadow-lg border-0" style="border-radius: 18px;">
+    
+    <div class="card-body p-5">
+      <h2 class="text-center mb-4 fw-bold">AI Interview Question</h2>
+      
+      <p class="text-center text-muted mb-4">
+        Question <span class="fw-bold"><%= @conversation.question_no %></span> of 5
+      </p>
+
+      <!-- Question Box -->
+      <div id="question-box" 
+           class="p-4 mb-4 bg-light border rounded shadow-sm"
+           style="min-height: 120px; font-size: 1.15rem; line-height: 1.6; border-radius: 14px;">
+        <span id="question" class="typed-text"></span>
+        <span id="cursor" class="blinking-cursor">|</span>
+      </div>
+
+      <!-- Answer Form -->
+      <%= form_with url: answer_students_interviews_path(id: @conversation.id), 
+                    method: :post, 
+                    data: { turbo: false } do |f| %>
+
+        <div class="mb-3">
+          <%= f.label :answer, "Your Answer", class: "form-label fw-semibold" %>
+          <%= f.text_area :answer, 
+                          rows: 4, 
+                          class: "form-control shadow-sm",
+                          style: "border-radius: 12px; font-size: 1rem;" %>
+        </div>
+
+        <div class="d-grid mt-4">
+          <%= f.submit "Submit Answer →", 
+                      class: "btn btn-primary btn-lg shadow-sm",
+                      style: "border-radius: 12px; font-weight: 600;" %>
+        </div>
+
+      <% end %>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .blinking-cursor {
+    font-weight: 100;
+    font-size: 1.2rem;
+    animation: blink 0.9s infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+
+  .typed-text {
+    white-space: pre-wrap;
+  }
+</style>
+
+<script>
+  const id = "<%= @conversation.id %>";
+  const questionEl = document.querySelector("#question");
+
+  const stream = new EventSource(`/students/interviews/${id}/stream_question`);
+
+  // Smooth typing effect: append text chunk-by-chunk
+  stream.onmessage = (event) => {
+    if (event.data === "[END]") {
+      stream.close();
+      document.getElementById("cursor").style.display = "none";
+      return;
+    }
+
+    questionEl.textContent += event.data;
+  };
+
+  stream.onerror = () => stream.close();
+</script>

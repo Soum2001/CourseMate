@@ -1,0 +1,2 @@
+class Institution < MainRecord
+end

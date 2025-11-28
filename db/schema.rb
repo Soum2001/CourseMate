@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_17_070542) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_28_141607) do
   create_table "cart_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "cart_id", null: false
     t.bigint "course_id", null: false
@@ -26,6 +26,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_070542) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_carts_on_user_id"
+  end
+
+  create_table "conversations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.string "topic"
+    t.string "stage", default: "start"
+    t.integer "question_no", default: 0
+    t.json "questions_json"
+    t.json "answers_json"
+    t.string "level"
+    t.text "analysis_text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_conversations_on_user_id"
   end
 
   create_table "courses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -47,6 +61,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_070542) do
     t.string "stripe_charge_id"
     t.index ["course_id"], name: "index_enrollments_on_course_id"
     t.index ["user_id"], name: "index_enrollments_on_user_id"
+  end
+
+  create_table "institutions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "identifier"
+    t.string "db_name"
+    t.string "db_username"
+    t.string "db_password"
+    t.string "db_host"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "db_port"
+  end
+
+  create_table "payout_logs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "instructor_id"
+    t.integer "course_id"
+    t.decimal "amount", precision: 10
+    t.string "stripe_transfer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "roles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -76,8 +111,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_17_070542) do
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.string "encrypted_password"
+    t.string "stripe_account_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "webhooks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "event_id"
+    t.string "event_type"
+    t.text "payload"
+    t.boolean "processed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "cart_items", "carts"

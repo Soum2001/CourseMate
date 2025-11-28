@@ -1,2 +1,9 @@
-<h1>Students::Checkouts#success</h1>
-<p>Find me in app/views/students/checkouts/success.html.erb</p>
+<h1>Payment Successful</h1>
+
+<p>You purchased:</p>
+
+<ul>
+  <% @courses.each do |course| %>
+    <li><%= course.title %></li>
+  <% end %>
+</ul>

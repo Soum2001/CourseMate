@@ -69,3 +69,9 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem "omniauth-rails_csrf_protection"
 gem 'stripe'
+gem "ruby-openai"
+gem "gemini-ai"
+gem 'ruby_llm'
+
+
+
