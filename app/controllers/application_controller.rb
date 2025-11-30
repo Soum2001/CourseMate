@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   # before_action :set_current_institution
   # before_action :switch_tenant_db
-  
+  respond_to :html, :turbo_stream
   def set_current_institution
     tenant_identifier = params[:tenant]
     binding.pry
@@ -22,6 +22,12 @@ class ApplicationController < ActionController::Base
       password: Current.institution.db_password,
       host:     Current.institution.db_host
     )
+    
+  end
+  def authenticate_user!
+    super
+  rescue UncaughtThrowError
+    redirect_to new_user_session_path, alert: "Please log in."
   end
   
 

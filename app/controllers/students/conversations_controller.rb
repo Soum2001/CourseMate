@@ -1,5 +1,6 @@
-class Students::InterviewsController < ApplicationController
+class Students::ConversationsController < ApplicationController
   include ActionController::Live  
+  before_action :authenticate_user!
   def language
     end
   
@@ -18,7 +19,7 @@ class Students::InterviewsController < ApplicationController
         questions_json: {},
         answers_json: {}
       )
-      redirect_to ask_students_interviews_path(id: @conversation.id)
+      redirect_to ask_students_conversation_path(@conversation)
     end
   
 
@@ -34,14 +35,16 @@ class Students::InterviewsController < ApplicationController
           answers_json: @conversation.answers_json,
           question_no: q_no + 1
         )
-        redirect_to ask_students_interviews_path(id: @conversation.id)
+        redirect_to ask_students_conversation_path(@conversation)
     
       else
         @conversation.update!(
           answers_json: @conversation.answers_json,
           stage: "completed"
         )
-        redirect_to finish_students_interviews_path(id: @conversation.id)
+      
+        redirect_to finish_students_conversation_path(@conversation)
+        
       end
     end
     
@@ -76,6 +79,7 @@ class Students::InterviewsController < ApplicationController
     
         full_question << token
         response.stream.write("data: #{token}\n\n")
+        sleep(0.02)
       end
     
       # Save question in DB once fully generated
@@ -91,98 +95,46 @@ class Students::InterviewsController < ApplicationController
     ensure
       response.stream.close
     end
-    
-    
-    
-    
-    
-    
-  end
    
     def finish
+
       @conversation = Conversation.find(params[:id])
   
       evaluation_prompt = <<~PROMPT
-        Evaluate this interview for topic: #{@conversation.topic}
-  
-        Questions and Answers:
-        #{@conversation.questions_json.to_json}
-        #{@conversation.answers_json.to_json}
-  
-        Provide:
-        - Skill Level (Beginner / Intermediate / Advanced)
-        - Strengths
-        - Weaknesses
-        - Summary
-      PROMPT
-  
-      result = GeminiClient.generate_content({
-        contents: [{ role: "user", parts: [{ text: evaluation_prompt }] }]
-      })
-      
-      analysis = analysis = result.dig("candidates", 0, "content", "parts", 0, "text")
-  
-      @conversation.update(
-        level: extract_level(analysis),
-        analysis_text: analysis
-      )
-  
-      @analysis = analysis
-    end
-  
-  
-    private
-  
+          Evaluate this interview based on the topic: #{@conversation.topic}
 
-  
-    def extract_level(analysis)
-  
-      if analysis.match?(/advanced/i)
-        "Advanced"
-      elsif analysis.match?(/intermediate/i)
-        "Intermediate"  
-      elsif analysis.match?(/beginner/i)
-        "Beginner"
-      else
-        "Unknown"
-      end
+          Questions and Answers:
+          #{@conversation.questions_json.to_json}
+          #{@conversation.answers_json.to_json}
+
+          Determine the user's skill level.
+
+          Respond with ONLY ONE WORD:
+          - Beginner
+          - Intermediate
+          - Advanced
+
+          Do not include explanations or extra text. Your entire reply must be exactly one of the above words.
+        PROMPT
+      chat = RubyLLM.chat(model: "gemini-2.0-flash")
+      answer = chat.ask(evaluation_prompt)
+      evaluated_level = answer.content.to_s.gsub(/\s+/, " ").strip
+      binding.pry
+      @conversation.update(
+        level: evaluated_level
+      )
+      mapped_name = Conversation::TOPIC_MAP[@conversation.topic.downcase] || @conversation.topic
+      category = Category.find_by(name: mapped_name)
+      
+      redirect_to students_courses_path(
+        level: evaluated_level,
+        category: category&.id,
+        topic: @conversation.topic
+      )
     end
-    def stream_gemini_question(topic, previous_questions)
-      previous_list =
-        if previous_questions.present?
-          previous_questions.map { |q| "- #{q}" }.join("\n")
-        else
-          "(none)"
-        end
   
-      prompt = <<~TEXT
-        Ask one short and clear interview question for a #{topic} developer.
-  
-        IMPORTANT:
-        - Do NOT repeat or be similar to these earlier questions:
-        #{previous_list}
-  
-        Return ONLY the question text.
-      TEXT
-  
-      Google::GenerativeAI::Models.generate_content_stream(
-        model: GEN_MODEL,
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: prompt }]
-          }
-        ]
-      ) do |event|
-  
-        # Extract chunk text (may be nil sometimes)
-        text = event.dig("candidates", 0, "content", "parts", 0, "text")
-        next unless text.present?
-  
-        # Send to browser immediately
-        response.stream.write "data: #{text}\n\n"
-      end
-    end
+  end
+
 
 
 

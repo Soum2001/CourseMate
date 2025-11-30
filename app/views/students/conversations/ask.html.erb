@@ -17,7 +17,7 @@
       </div>
 
       <!-- Answer Form -->
-      <%= form_with url: answer_students_interviews_path(id: @conversation.id), 
+      <%= form_with url: answer_students_conversation_path(@conversation), 
                     method: :post, 
                     data: { turbo: false } do |f| %>
 
@@ -61,19 +61,46 @@
 <script>
   const id = "<%= @conversation.id %>";
   const questionEl = document.querySelector("#question");
+  const cursorEl = document.getElementById("cursor");
 
-  const stream = new EventSource(`/students/interviews/${id}/stream_question`);
+  const stream = new EventSource(`/students/conversations/${id}/stream_question`);
 
-  // Smooth typing effect: append text chunk-by-chunk
+  let queue = [];
+  let typing = false;
+
+  function typeWriter() {
+    if (typing) return;
+    if (queue.length === 0) return;
+
+    typing = true;
+    const text = queue.shift();
+    let i = 0;
+
+    function typeChar() {
+      if (i < text.length) {
+        questionEl.textContent += text[i];
+        i++;
+        setTimeout(typeChar, 30); // ← delay per character
+      } else {
+        typing = false;
+        typeWriter(); // continue with next chunk
+      }
+    }
+
+    typeChar();
+  }
+
   stream.onmessage = (event) => {
     if (event.data === "[END]") {
       stream.close();
-      document.getElementById("cursor").style.display = "none";
+      cursorEl.style.display = "none";
       return;
     }
 
-    questionEl.textContent += event.data;
+    queue.push(event.data);
+    typeWriter();
   };
 
   stream.onerror = () => stream.close();
+
 </script>

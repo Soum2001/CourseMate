@@ -6,7 +6,7 @@
       Type your preferred technology (Ruby, Python, JavaScript…)
     </p>
 
-    <%= form_with url: start_students_interviews_path, method: :post, data: { turbo: false } do %>
+    <%= form_with url: start_students_conversations_path, method: :post, data: { turbo: false } do %>
       
       <div class="mb-3">
         <%= text_area_tag :tech, nil,

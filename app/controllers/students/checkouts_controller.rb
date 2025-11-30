@@ -14,7 +14,6 @@ class Students::CheckoutsController < ApplicationController
             "quantity" => 1
           }
         end
-       
         session = Stripe::Checkout::Session.create(
           payment_method_types: ["card"],
           line_items: line_items,
@@ -27,7 +26,7 @@ class Students::CheckoutsController < ApplicationController
           },         
           customer_creation: "always",
           billing_address_collection: "required",  
-          success_url: students_enrollment_url,
+          success_url: students_enrollments_url,
           cancel_url: students_carts_url
         )
         render json: { id: session.id }

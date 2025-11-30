@@ -5,7 +5,19 @@ module Students
 
 
       def index
+        # LEVEL filter 
         @courses = Course.where.not(instructor_id: current_user.id)
+        if params[:level].present?
+          level = Level.find_by(name: params[:level])
+          @courses = @courses.where(level_id: level.id) if level
+        end
+       
+        # TOPIC filter using SQL LIKE
+        if params[:topic].present?
+          keyword = params[:topic].downcase.strip
+          @courses = @courses.where("LOWER(title) LIKE ?", "%#{keyword}%")
+         
+        end
       end
     
       def show

@@ -1,6 +1,6 @@
 
 <div class="container mt-5">
-  <h1 class="text-center mb-4 fw-bold text-primary">Available Courses</h1>
+  <h1 class="text-center mb-4 fw-bold text-primary">Enrolled Courses</h1>
   <div class="row">
     <% @courses.each do |course| %>
       <div class="col-md-4 mb-4">
@@ -19,15 +19,11 @@
           </div>
 
           <div class="card-footer bg-white border-0 d-flex justify-content-between">
-            <%= link_to "View", course_path(course), class: "btn btn-outline-primary btn-sm" %>
-            <%= link_to "Edit", edit_course_path(course), class: "btn btn-outline-warning btn-sm" %>
+            <%= link_to "View", students_course_path(course), class: "btn btn-outline-primary btn-sm" %>
+            <%= link_to "Edit", edit_students_course_path(course), class: "btn btn-outline-warning btn-sm" %>
           </div>
         </div>
       </div>
     <% end %>
-  </div>
-
-  <div class="text-center mt-4">
-    <%= link_to "Create New Course", new_course_path, class: "btn btn-primary px-4 py-2" %>
   </div>
 </div>

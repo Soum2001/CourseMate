@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_28_141607) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_30_053319) do
   create_table "cart_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "cart_id", null: false
     t.bigint "course_id", null: false
@@ -26,6 +26,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_141607) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_carts_on_user_id"
+  end
+
+  create_table "categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
   create_table "conversations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -50,6 +57,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_141607) do
     t.datetime "updated_at", null: false
     t.string "video_url"
     t.decimal "amount", precision: 10
+    t.bigint "category_id", null: false
+    t.bigint "level_id"
+    t.index ["category_id"], name: "index_courses_on_category_id"
+    t.index ["level_id"], name: "index_courses_on_level_id"
   end
 
   create_table "enrollments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -73,6 +84,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_141607) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "db_port"
+  end
+
+  create_table "interviews", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "topic"
+    t.string "level"
+    t.string "stage"
+    t.integer "question_no", default: 0
+    t.json "questions_json"
+    t.json "answers_json"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_interviews_on_user_id"
+  end
+
+  create_table "levels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "rank", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_levels_on_name", unique: true
+    t.index ["rank"], name: "index_levels_on_rank"
   end
 
   create_table "payout_logs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -128,8 +161,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_141607) do
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "courses"
   add_foreign_key "carts", "users"
+  add_foreign_key "courses", "levels"
   add_foreign_key "enrollments", "courses"
   add_foreign_key "enrollments", "users"
+  add_foreign_key "interviews", "users"
   add_foreign_key "user_roles", "roles"
   add_foreign_key "user_roles", "users"
 end

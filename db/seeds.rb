@@ -9,6 +9,9 @@
 #   end
 
 
+## -----------------------------
+# COURSE TITLES
+# -----------------------------
 course_titles = [
   "Beginner Ruby Programming",
   "Modern JavaScript Essentials",
@@ -32,11 +35,83 @@ course_titles = [
   "Linux Command Line Essentials"
 ]
 
-20.times do |i|
+
+# -----------------------------
+# CATEGORY + LEVEL MAPPERS
+# -----------------------------
+category_ids = {
+  programming:  Category.find_by(name: "Programming").id,
+  data_science: Category.find_by(name: "Data Science").id,
+  cloud:        Category.find_by(name: "Cloud Computing").id,
+  devops:       Category.find_by(name: "DevOps").id
+}
+
+level_ids = {
+  beginner:     Level.find_by(name: "Beginner").id,
+  intermediate: Level.find_by(name: "Intermediate").id,
+  advanced:     Level.find_by(name: "Advanced").id
+}
+
+
+# -----------------------------
+# CREATE COURSES
+# -----------------------------
+course_titles.each do |title|
+  # Auto-assign category based on keywords
+  category_id =
+    case title
+    when /Ruby|JavaScript|Web|HTML|CSS|React|Rails|GraphQL|Mobile|UI|UX|Tailwind|API/i
+      category_ids[:programming]
+    when /Machine Learning|Pandas|Data|Analysis/i
+      category_ids[:data_science]
+    when /Cloud/i
+      category_ids[:cloud]
+    when /Docker|DevOps|Linux|Git|Agile/i
+      category_ids[:devops]
+    else
+      category_ids.values.sample
+    end
+
+  # Auto-assign level
+  level_id =
+    case title
+    when /Beginner|Intro|Basics|Essentials/i
+      level_ids[:beginner]
+    when /Advanced|Deep|Masterclass/i
+      level_ids[:advanced]
+    else
+      level_ids[:intermediate]
+    end
+
   Course.create!(
-    title: course_titles[i],
-    description: "A comprehensive course on #{course_titles[i]}. Learn step-by-step with practical projects.",
+    title: title,
+    description: "A comprehensive course on #{title}. Learn step-by-step with practical projects.",
     amount: 1,
-    instructor_id: [2, 3].sample
+    instructor_id: [2, 3].sample,
+    category_id: category_id,
+    level_id: level_id
   )
 end
+
+# categories = [
+#   { name: "Programming"},
+#   { name: "Data Science"},
+#   { name: "Cloud Computing"},
+#   { name: "DevOps" }
+# ]
+# categories.each do |cat|
+#   Category.find_or_create_by(name: cat[:name]) do |c|
+
+#   end
+# end
+
+# levels = [
+#   { name: "Beginner", rank: 1},
+#   { name: "Intermediate", rank: 2 },
+#   { name: "Advanced", rank: 3}
+# ]
+# levels.each do |lvl|
+#   Level.find_or_create_by(name: lvl[:name]) do |l|
+#     l.rank = lvl[:rank]
+#   end
+# end

@@ -6,7 +6,7 @@ class User < ApplicationRecord
   :omniauthable, omniauth_providers: [:google_oauth2]
 
     has_many :enrollments
-    has_many :courses, through: :enrollments
+    has_many :enrolled_courses, through: :enrollments,source: :course
     has_many :instructed_courses, class_name: 'Course', foreign_key: 'instructor_id'
     has_many :user_roles
     has_many :roles, through: :user_roles

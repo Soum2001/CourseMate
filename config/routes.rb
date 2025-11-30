@@ -39,8 +39,6 @@ Rails.application.routes.draw do
   # root "posts#index"
   
   namespace :instructors do
-    get "onboarding/refresh"
-    get "onboarding/return"
     resources :courses
     resource :profile, only: [:show, :edit, :update]
     root "courses#index" 
@@ -49,25 +47,24 @@ Rails.application.routes.draw do
     get "onboarding/onboard_account", to: "onboarding#onboard_account"
   end
   namespace :students do
-
     resources :cart_items
-    get "checkouts/success", to: "checkouts#success"
+    # get "checkouts/success", to: "checkouts#success"
     resources :checkouts, only: [:create]
     resources :enrollments
-    resources :interviews, only: [] do
+    resources :conversations, only: [] do
       collection do
         get  :language
         post :start
-        post :answer
-        get  :finish
-        get  :ask
       end
       member do
-        get :stream_question    
+        get :stream_question 
+        get  :finish   
+        post :answer
+        get  :ask
       end
     end
     resources :carts,only: [:show, :index,:create] 
-    resources :courses, only: [:show, :index]
+    resources :courses
     root "enrollments#index" 
   end
   post "/webhooks/stripe", to: "webhooks#stripe"

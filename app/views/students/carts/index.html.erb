@@ -137,12 +137,12 @@
         "X-CSRF-Token": "<%= form_authenticity_token %>"
       },
       body: JSON.stringify({
-        course_ids: <%= @courses.map(&:id) %>
+        course_ids: <%= @courses.map(&:id)%>
       })
     });
 
     const session = await response.json();
-
+    alert(session.id);
     // THIS opens Stripe’s pre-built checkout page
     stripe.redirectToCheckout({ sessionId: session.id });
   });
