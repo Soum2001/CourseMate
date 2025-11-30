@@ -86,19 +86,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_053319) do
     t.integer "db_port"
   end
 
-  create_table "interviews", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "topic"
-    t.string "level"
-    t.string "stage"
-    t.integer "question_no", default: 0
-    t.json "questions_json"
-    t.json "answers_json"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_interviews_on_user_id"
-  end
-
   create_table "levels", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "rank", null: false
@@ -164,7 +151,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_053319) do
   add_foreign_key "courses", "levels"
   add_foreign_key "enrollments", "courses"
   add_foreign_key "enrollments", "users"
-  add_foreign_key "interviews", "users"
   add_foreign_key "user_roles", "roles"
   add_foreign_key "user_roles", "users"
 end

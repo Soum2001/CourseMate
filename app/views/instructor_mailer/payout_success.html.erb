@@ -1,0 +1,28 @@
+<h2>Hi <%= @instructor.name %>,</h2>
+
+<p>You have received a new payout from EduSource.</p>
+
+<h3>Payout Details</h3>
+
+<table style="width: 100%; border-collapse: collapse;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding: 6px 0;">Course</th>
+      <th style="text-align:left; padding: 6px 0;">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @payout_items.each do |item| %>
+      <tr>
+        <td style="padding: 4px 0;"><%= item[:course].title %></td>
+        <td style="padding: 4px 0;">$<%= item[:amount] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr>
+
+<p><strong>Total Earned:</strong> $<%= @total_amount %></p>
+
+<p>Thank you for being part of EduSource!</p>
